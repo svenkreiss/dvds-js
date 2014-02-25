@@ -1,5 +1,7 @@
 # dvds-js
 
+[![Build Status](https://travis-ci.org/svenkreiss/dvds-js.png?branch=master)](https://travis-ci.org/svenkreiss/dvds-js)
+
 Distributed versioned data structures implemented in JavaScript for browsers and node.js.
 __It is currently in development without a stable release yet.__
 
