@@ -1,83 +1,108 @@
-<!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Dvds-js by svenkreiss</title>
+    <title>dvds-js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://s3.amazonaws.com/flaskApp_static/static/bootstrap3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        font-family: "Helvetica Neue", helvetica, arial;
+        padding: 35px;
+      }
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+      h1 {font-size:500%;text-align:center;}
+      @media screen and (max-width: 768px) {
+        h1 {font-size:300%;}
+      }
+      h1>a { color:#888; }
+      h1>a:hover { color:#000; text-decoration:none; }
+
+      .footer { color:#ccc; font-size:80%; }
+      .footer a { color:#ccc; }
+
+
+      /* graph styles */
+      svg {
+        border:1px solid #faa;
+        background-color:#fee;
+      }
+      .link {
+        stroke: #000;
+        stroke-width: 1.5px;
+      }
+      .node circle {
+        fill: #000;
+        stroke: #fff;
+        stroke-width: 1.5px;
+      }
+      .node text {
+        text-anchor: middle;
+      }
+    </style>
+
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Dvds-js</h1>
-        <p>Distributed versioned data structures implemented in JavaScript.</p>
 
-        <p class="view"><a href="https://github.com/svenkreiss/dvds-js">View the Project on GitHub <small>svenkreiss/dvds-js</small></a></p>
+<div class="container page">
+
+  <h1><a href="/">dvds-js</a></h1>
+
+  <div style="text-align:center">
+    <a href="http://github.com/svenkreiss/dvds-js">view on github</a>
+  </div>
+
+  <br /><br /><br />
+  <h2>Examples</h2>
+
+  <p>fork, modify original branch and merge</p>
+<pre>
+var a = new dvds.Array(['test']);
+var b = a.fork();
+a.data = ['originalModified'];
+b.data = ['forkedModified'];
+a.merge(b);
+</pre>
+  <p>a = <span id="test1">?</span></p>
+
+  <h3>Graph of Commits</h3>
+  <svg height="150" width="600" id="test1Graph"></svg>
 
 
-        <ul>
-          <li><a href="https://github.com/svenkreiss/dvds-js/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/svenkreiss/dvds-js/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/svenkreiss/dvds-js">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
-<a name="dvds-js" class="anchor" href="#dvds-js"><span class="octicon octicon-link"></span></a>dvds-js</h1>
 
-<p>Distributed versioned data structures implemented in JavaScript for browsers and node.js.
-<strong>It is currently in development without a stable release yet.</strong></p>
+  <br /><br /><br />
+  <hr />
+  <div class="footer">
+  Copyright Sven Kreiss 2014
+  </div>
 
-<p>The idea is that you can <em>fork</em> an object (like an array), change the original and the forked object and then <em>merge</em> it in a graceful way. Implementations are inspired by git. Every object should support:</p>
+</div>
 
-<ul>
-<li>
-<strong>commit</strong>: storing the current state of the object</li>
-<li>
-<strong>fork</strong>: making a deep copy</li>
-<li>
-<strong>merge</strong>: merges a fork back into the original branch</li>
-</ul><h2>
-<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://s3.amazonaws.com/flaskApp_static/static/d3/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://s3.amazonaws.com/flaskApp_static/static/bootstrap3/js/bootstrap.min.js"></script>
+<script src="lib/require.js"></script>
+<script src="lib/dvds.min.js"></script>
+<script>
+require.config({
+    paths: {
+        'crypto-js.SHA3': 'http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3',
+    },
+    shim: {
+        'crypto-js.SHA3': {
+            exports: 'CryptoJS'
+        }
+    }
+});
+require(['dvds'], function(dvds) {
+  var a = new dvds.Array(['test']);
+  var b = a.fork();
+  a.data = ['originalModified'];
+  b.data = ['forkedModified'];
+  a.merge(b);
+  $('#test1').text(JSON.stringify(a.data));    
+  a.visualizeInD3()( d3.select('#test1Graph') );
+});
+</script>
 
-<p>Below are test cases that currently pass.<br>
-(Warning: there is currently no LCS algorithm and arrays of different length can get corrupted in the merge.)</p>
 
-<pre><code>    // fork, modify original branch and merge
-    var a = new dvds.Array(['test']);
-    var b = a.fork();
-    a.data = ['originalModified'];
-    a.merge(b);
-    // --&gt; a.data: ['originalModified']
-
-    // fork, modify forked branch and merge
-    var a = new dvds.Array(['test']);
-    var b = a.fork();
-    b.data = ['forkedModified'];
-    a.merge(b);
-    // --&gt; a.data: ['forkedModified']
-
-    // fork, modify both branches and merge (conflict resolution: original)
-    var a = new dvds.Array(['test']);
-    var b = a.fork();
-    a.data = ['originalModified'];
-    b.data = ['forkedModified'];
-    a.merge(b);
-    // --&gt; a.data: ['originalModified']
-</code></pre>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/svenkreiss">svenkreiss</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
