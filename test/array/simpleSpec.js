@@ -56,6 +56,15 @@ define(['dvds'], function(dvds) {
             a.merge(b);
             expect( a.toString() ).toContain( 'originalModified' );
         });
+
+        it('demo', function() {
+            var a = new dvds.Array(['Paul','Adam']);
+            var b = a.fork();
+            a.data = ['Paula','Adam'];
+            b.data = ['Karl','Peter'];
+            a.merge(b);
+            expect( JSON.stringify(a.data) ).toBe( '["Paula","Peter"]' );
+        });
     });
 
 });

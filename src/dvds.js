@@ -330,6 +330,7 @@ dvds.Array = function(data) {
 		var mergedCommit = this.currentCommit.recursiveThreeWayMerge(other.currentCommit);
 		this.currentCommit = mergedCommit;
 		this.commits.push(mergedCommit);
+		this.data = mergedCommit.data;
 
 		// Add new commits to the list of commits to import the other branch as well.
 		// TODO This needs to be optimized to find the proper subgraph.
