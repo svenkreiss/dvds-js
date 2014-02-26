@@ -60,8 +60,9 @@ define(['dvds'], function(dvds) {
         it('demo', function() {
             var a = new dvds.Array(['Paul','Adam']);
             var b = a.fork();
-            a.data = ['Paula','Adam'];
-            b.data = ['Karl','Peter'];
+            a.data[0] = 'Paula';
+            b.data[0] = 'Karl';
+            b.data[1] = 'Peter';
             a.merge(b);
             expect( JSON.stringify(a.data) ).toBe( '["Paula","Peter"]' );
         });

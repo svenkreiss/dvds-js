@@ -26,7 +26,7 @@ dvds.Commit = function(parents,data) {
 	*/
 
 	this.parents = parents;
-	this.data = data;
+	this.data = JSON.parse(JSON.stringify(data));
 	this.dataHash = CryptoJS.SHA3( JSON.stringify(data) ).toString();
 	this.date = new Date();
 
@@ -313,7 +313,7 @@ dvds.Array = function(data) {
 	this.fork = function() {
 		this.commit();
 
-		var out = new dvds.Array(this.data);
+		var out = new dvds.Array(JSON.parse(JSON.stringify(this.data)));
 		out.commits = this.commits.map( function(c) { return c.clone(); });
 		out.currentCommit = out.commits[ out.commits.length-1 ];
 		return out;
