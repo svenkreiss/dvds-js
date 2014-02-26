@@ -20,11 +20,28 @@ module.exports = function(grunt) {
       unit: {
         configFile: 'karma.conf.js'
       }
+    },
+    jscs: {
+      src: "src/*.js",
+      options: {
+        "requireSpaceAfterKeywords": [
+          "if","else","for","while","do","switch","return","try","catch"
+        ],
+        "requireParenthesesAroundIIFE": true,
+        "disallowSpacesInsideObjectBrackets": true,
+        "disallowSpacesInsideArrayBrackets": true,
+        "disallowSpaceAfterObjectKeys": true,
+        "requireCamelCaseOrUpperCaseIdentifiers": true,
+        "validateLineBreaks": "LF",
+        "validateIndentation": "\t",
+        "disallowTrailingWhitespace": true
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks("grunt-jscs-checker");
 
   // Default task(s).
   grunt.registerTask('default', ['uglify']);
