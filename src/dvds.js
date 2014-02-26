@@ -3,11 +3,13 @@ if (typeof define !== 'function') {
 }
 
 define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
+	/*
+	 * Dependency: CryptoJS for SHA3 (using SHA3 instead of SHA1 because it is used in uncentral).
+	 */
+
+
 
 	dvds = {};
-	/*
-	Dependency: CryptoJS for SHA3 (using SHA3 instead of SHA1 because it is used in uncentral).
-	*/
 
 
 	/* ---------- objects for version control ----------- */
