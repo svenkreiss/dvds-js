@@ -15,7 +15,7 @@ The idea is that you can _fork_ an object (like an array), change the original a
 
 ## Examples
 
-Below are test cases that currently pass.  
+Below are test cases that currently pass. [A live demo and a commit graph is here](http://svenkreiss.github.io/dvds-js/).  
 (Warning: there is currently no LCS algorithm and arrays of different length can get corrupted in the merge.)
 
 ```
