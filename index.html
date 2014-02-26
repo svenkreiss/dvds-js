@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Dvds-js by svenkreiss</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Dvds-js</h1>
+        <p>Distributed versioned data structures implemented in JavaScript.</p>
+
+        <p class="view"><a href="https://github.com/svenkreiss/dvds-js">View the Project on GitHub <small>svenkreiss/dvds-js</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/svenkreiss/dvds-js/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/svenkreiss/dvds-js/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/svenkreiss/dvds-js">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="dvds-js" class="anchor" href="#dvds-js"><span class="octicon octicon-link"></span></a>dvds-js</h1>
+
+<p>Distributed versioned data structures implemented in JavaScript for browsers and node.js.
+<strong>It is currently in development without a stable release yet.</strong></p>
+
+<p>The idea is that you can <em>fork</em> an object (like an array), change the original and the forked object and then <em>merge</em> it in a graceful way. Implementations are inspired by git. Every object should support:</p>
+
+<ul>
+<li>
+<strong>commit</strong>: storing the current state of the object</li>
+<li>
+<strong>fork</strong>: making a deep copy</li>
+<li>
+<strong>merge</strong>: merges a fork back into the original branch</li>
+</ul><h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>Below are test cases that currently pass.<br>
+(Warning: there is currently no LCS algorithm and arrays of different length can get corrupted in the merge.)</p>
+
+<pre><code>    // fork, modify original branch and merge
+    var a = new dvds.Array(['test']);
+    var b = a.fork();
+    a.data = ['originalModified'];
+    a.merge(b);
+    // --&gt; a.data: ['originalModified']
+
+    // fork, modify forked branch and merge
+    var a = new dvds.Array(['test']);
+    var b = a.fork();
+    b.data = ['forkedModified'];
+    a.merge(b);
+    // --&gt; a.data: ['forkedModified']
+
+    // fork, modify both branches and merge (conflict resolution: original)
+    var a = new dvds.Array(['test']);
+    var b = a.fork();
+    a.data = ['originalModified'];
+    b.data = ['forkedModified'];
+    a.merge(b);
+    // --&gt; a.data: ['originalModified']
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/svenkreiss">svenkreiss</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
