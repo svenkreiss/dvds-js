@@ -58,8 +58,9 @@
 <pre>
 var a = new dvds.Array(['Paul','Adam']);
 var b = a.fork();
-a.data = ['Paula','Adam'];
-b.data = ['Karl','Peter'];
+a.data[0] = 'Paula';
+b.data[0] = 'Karl';
+b.data[1] = 'Peter';
 a.merge(b);
 </pre>
   <p><b>Result:</b> a.data = <i><span id="test1">?</span></i></p>
@@ -96,8 +97,9 @@ require.config({
 require(['dvds'], function(dvds) {
   var a = new dvds.Array(['Paul','Adam']);
   var b = a.fork();
-  a.data = ['Paula','Adam'];
-  b.data = ['Karl','Peter'];
+  a.data[0] = 'Paula';
+  b.data[0] = 'Karl';
+  b.data[1] = 'Peter';
   a.merge(b);
   $('#test1').text(JSON.stringify(a.data));    
   a.visualizeInD3()( d3.select('#test1Graph') );
