@@ -94,7 +94,7 @@ require.config({
         }
     }
 });
-require(['dvds'], function(dvds) {
+require(['dvds','dvds.visualize'], function(dvds) {
   var a = new dvds.Array(['Paul','Adam']);
   var b = a.fork();
   a.data[0] = 'Paula';
@@ -102,7 +102,7 @@ require(['dvds'], function(dvds) {
   b.data[1] = 'Peter';
   a.merge(b);
   $('#test1').text(JSON.stringify(a.data));    
-  a.visualizeInD3()( d3.select('#test1Graph') );
+  dvds.visualize.CommitGraph(d3.select('#test1Graph'))(a);
 });
 </script>
 
