@@ -3,12 +3,12 @@ define(['dvds'], function(dvds) {
     describe('just checking', function() {
 
         it('is dvds in scope', function() {
-            var e = new dvds.Array(['test']);
+            var e = new dvds.Repository(['test']);
             expect( e.toString() ).toEqual( 'test -- no commits' );
         });
 
         it('single commit', function() {
-            var e = new dvds.Array(['test']);
+            var e = new dvds.Repository(['test']);
             e.commit()
             expect( e.toString() ).toContain( 'test' );
         });
@@ -18,7 +18,7 @@ define(['dvds'], function(dvds) {
 
     describe('fork and merge', function() {
         it('just a fork', function() {
-            var a = new dvds.Array(['test']);
+            var a = new dvds.Repository(['test']);
             var b = a.fork();
             expect( b.toString() ).toContain( 'test' );
             expect( a.data ).toContain( 'test' );
@@ -26,14 +26,14 @@ define(['dvds'], function(dvds) {
         });
 
         it('fork and merge unmodified', function() {
-            var a = new dvds.Array(['test']);
+            var a = new dvds.Repository(['test']);
             var b = a.fork();
             a.merge(b);
             expect( a.toString() ).toContain( 'test' );
         });
 
         it('fork, modify original branch and merge', function() {
-            var a = new dvds.Array(['test']);
+            var a = new dvds.Repository(['test']);
             var b = a.fork();
             a.data = ['originalModified'];
             a.merge(b);
@@ -41,7 +41,7 @@ define(['dvds'], function(dvds) {
         });
 
         it('fork, modify forked branch and merge', function() {
-            var a = new dvds.Array(['test']);
+            var a = new dvds.Repository(['test']);
             var b = a.fork();
             b.data = ['forkedModified'];
             a.merge(b);
@@ -49,7 +49,7 @@ define(['dvds'], function(dvds) {
         });
 
         it('fork, modify both branches and merge (conflict resolution: original)', function() {
-            var a = new dvds.Array(['test']);
+            var a = new dvds.Repository(['test']);
             var b = a.fork();
             a.data = ['originalModified'];
             b.data = ['forkedModified'];
@@ -58,7 +58,7 @@ define(['dvds'], function(dvds) {
         });
 
         it('demo', function() {
-            var a = new dvds.Array(['Paul','Adam']);
+            var a = new dvds.Repository(['Paul','Adam']);
             var b = a.fork();
             a.data[0] = 'Paula';
             b.data[0] = 'Karl';

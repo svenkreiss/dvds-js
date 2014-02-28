@@ -7,8 +7,8 @@ define('dvds.visualize', ['dvds'], function(dvds) {
 	dvds.visualize = {};
 
 	dvds.visualize.CommitGraph = function(selection) {
-		/* 
-		 * Visualizes the commit graph of a repository using the 
+		/*
+		 * Visualizes the commit graph of a repository using the
 		 * force layout of d3.js.
 		 */
 

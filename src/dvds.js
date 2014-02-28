@@ -174,7 +174,7 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 
 
 
-	dvds.Array = function(data) {
+	dvds.Repository = function(data) {
 		/*
 		 * The structure is a little bit based on the git internals:
 		 *    http://git-scm.com/book/en/Git-Internals-Git-Objects
@@ -229,7 +229,7 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 		this.fork = function() {
 			this.commit();
 
-			var out = new dvds.Array( JSON.parse(JSON.stringify(this.data)) );
+			var out = new dvds.Repository( JSON.parse(JSON.stringify(this.data)) );
 			out.commits = this.commits.map( function(c) { return c.clone(); });
 			out.currentCommit = out.commits[ out.commits.length-1 ];
 			return out;
