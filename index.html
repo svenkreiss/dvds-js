@@ -53,16 +53,27 @@
   </div>
 
   <br /><br /><br />
-  <h2>Examples</h2>
+  <h2>Example</h2>
 
   <p>fork, modify both branches and merge (conflict resolution: original)</p>
 <pre>
-var a = new dvds.Array(['Paul','Adam']);
+var a = new dvds.Repository(['Paul','Adam']);
 var b = a.fork();
+var bString = JSON.stringify(b);
+
+// send bString to a different machine and make it a repository again
+var bStreamed = dvds.Repository.parseJSON( JSON.parse(bString) );
+bStreamed.data[0] = 'Karl';
+bStreamed.data[1] = 'Peter';
+// convert to a string again to send back
+var bStreamedString = JSON.stringify(bStreamed);
+
+// meanwhile on a
 a.data[0] = 'Paula';
-b.data[0] = 'Karl';
-b.data[1] = 'Peter';
-a.merge(b);
+
+// receive the modified b repository
+var bReceived = dvds.Repository.parseJSON( JSON.parse(bStreamedString) );
+a.merge(bReceived);
 </pre>
   <p><b>Result:</b> a.data = <i><span id="test1">?</span></i></p>
 
@@ -96,12 +107,24 @@ require.config({
     }
 });
 require(['dvds','dvds.visualize'], function(dvds) {
-  var a = new dvds.Array(['Paul','Adam']);
+  var a = new dvds.Repository(['Paul','Adam']);
   var b = a.fork();
+  var bString = JSON.stringify(b);
+
+  // send bString to a different machine and make it a repository again
+  var bStreamed = dvds.Repository.parseJSON( JSON.parse(bString) );
+  bStreamed.data[0] = 'Karl';
+  bStreamed.data[1] = 'Peter';
+  // convert to a string again to send back
+  var bStreamedString = JSON.stringify(bStreamed);
+
+  // meanwhile on a
   a.data[0] = 'Paula';
-  b.data[0] = 'Karl';
-  b.data[1] = 'Peter';
-  a.merge(b);
+
+  // receive the modified b repository
+  var bReceived = dvds.Repository.parseJSON( JSON.parse(bStreamedString) );
+  a.merge(bReceived);
+
   $('#test1').text(JSON.stringify(a.data));    
   dvds.visualize.CommitGraph(d3.select('#test1Graph'))(a);
 });
