@@ -57,6 +57,29 @@ define(['dvds'], function(dvds) {
             expect( a.toString() ).toContain( 'originalModified' );
         });
 
+        it('parseJSON()', function() {
+            var a = new dvds.Repository(['Paul','Adam']);
+            var aStreamed = dvds.Repository.parseJSON( JSON.parse(JSON.stringify(a)) );
+            expect( JSON.stringify(a) ).toBe( JSON.stringify(aStreamed) );
+        });
+
+        it('parseJSON() with commit', function() {
+            var a = new dvds.Repository(['Paul','Adam']);
+            a.commit();
+            var aStreamed = dvds.Repository.parseJSON( JSON.parse(JSON.stringify(a)) );
+            expect( JSON.stringify(a) ).toBe( JSON.stringify(aStreamed) );
+        });
+
+        it('demo without streaming', function() {
+            var a = new dvds.Repository(['Paul','Adam']);
+            var b = a.fork();
+            a.data[0] = 'Paula';
+            b.data[0] = 'Karl';
+            b.data[1] = 'Peter';
+            a.merge(b);
+            expect( JSON.stringify(a.data) ).toBe( '["Paula","Peter"]' );
+        });
+
         it('demo', function() {
             var a = new dvds.Repository(['Paul','Adam']);
             var b = a.fork();
