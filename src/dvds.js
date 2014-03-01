@@ -160,12 +160,31 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 				console.log(ancestorFromThis);
 				return;
 			}
-
 		};
-
 
 	};
 
+	dvds.Commit.parseJSON = function(json) {
+		/* Builds a commit object form JSON but keeps the parents
+		 * identified by ids only. Restoring those to full objects
+		 * has to be done manually. If invoked from form
+		 * Repository.parseJSON(), this is handled there.
+		 */
+
+		var parentIds = null;
+		if (json.parents) {
+			parentIds = json.parents.map(function(p) { return p.id; });
+		}
+		var newCommit = new dvds.Commit(parentIds, json.data);
+
+		newCommit.dataHash = json.dataHash;
+
+		newCommit.date = json.date;
+
+		newCommit.id = json.id;
+
+		return newCommit;
+	};
 
 
 
@@ -188,11 +207,11 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 		this.commits = [];
 		this.currentCommit = null;
 
-		this.objectGraph= function() {
-			/*
-			 * Take the list of commits that contain references to the parent
-			 * and build a left-child-right-sibling tree from it.
-			 */
+		this.commitById = function(id) {
+			// search through this.commits for id and return that object
+			for (c in this.commits) {
+				if (this.commits[c].id == id) return this.commits[c];
+			}
 		};
 
 		this.commitConnectionsToString = function() {
@@ -262,6 +281,31 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 			return mergedCommit;
 		};
 	};
+
+	dvds.Repository.parseJSON = function(json) {
+		var newRepo = new dvds.Repository(json.data);
+
+		json.commits.map(function(c) {
+			newRepo.commits.push(dvds.Commit.parseJSON(c));
+		});
+
+		if (json.currentCommit) {
+			newRepo.currentCommit = newRepo.commitById(json.currentCommit.id);
+		}
+
+		// reconnect parent ids in commits to full objects
+		for (c in newRepo.commits) {
+			var parents = newRepo.commits[c].parents;
+			if (parents) {
+				parents.map( function(p) {
+					return newRepo.commitById(p);
+				});
+			}
+		}
+
+		return newRepo;
+	};
+
 
 	return dvds;
 });
