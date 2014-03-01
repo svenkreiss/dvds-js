@@ -44,6 +44,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-jscs-checker");
 
   // Default task(s).
-  grunt.registerTask('default', ['uglify']);
+  grunt.registerTask('default', ['jscs', 'uglify']);
 
 };
