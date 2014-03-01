@@ -83,10 +83,22 @@ define(['dvds'], function(dvds) {
         it('demo', function() {
             var a = new dvds.Repository(['Paul','Adam']);
             var b = a.fork();
+            var bString = JSON.stringify(b);
+
+            // send bString to a different machine and make it a repository again
+            var bStreamed = dvds.Repository.parseJSON( JSON.parse(bString) );
+            bStreamed.data[0] = 'Karl';
+            bStreamed.data[1] = 'Peter';
+            // convert to a string again to send back
+            var bStreamedString = JSON.stringify(bStreamed);
+
+            // meanwhile on a
             a.data[0] = 'Paula';
-            b.data[0] = 'Karl';
-            b.data[1] = 'Peter';
-            a.merge(b);
+
+            // receive the modified b repository
+            var bReceived = dvds.Repository.parseJSON( JSON.parse(bStreamedString) );
+            a.merge(bReceived);
+
             expect( JSON.stringify(a.data) ).toBe( '["Paula","Peter"]' );
         });
     });
