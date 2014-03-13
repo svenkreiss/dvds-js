@@ -1,0 +1,79 @@
+define(['dvds'], function(dvds) {
+
+	describe('Commit.merge-simple', function() {
+		var a,b;
+
+		beforeEach( function() {
+			a = new dvds.Repository(['Paul','Adam']);
+			b = a.fork();
+		});
+
+		it('merges arrays of equal length', function() {
+			a.data[0] = 'Paula';
+			b.data[0] = 'Karl';
+			b.data[1] = 'Peter';
+			a.merge(b);
+			expect( a.data[0] ).toBe('Paula');
+			expect( a.data[1] ).toBe('Peter');
+		});
+
+		it('deleted first element in a', function() {
+			a.data = ['Paul'];
+			a.merge(b);
+			expect( a.data.length ).toBe(1);
+			expect( a.data[0] ).toBe('Paul');
+		});
+
+		it('deleted first element in b', function() {
+			b.data = ['Paul'];
+			a.merge(b);
+			expect( a.data.length ).toBe(1);
+			expect( a.data[0] ).toBe('Paul');
+		});
+		
+		it('deleted second element in a', function() {
+			a.data = ['Adam'];
+			a.merge(b);
+			expect( a.data.length ).toBe(1);
+			expect( a.data[0] ).toBe('Adam');
+		});
+
+		it('deleted second element in b', function() {
+			b.data = ['Adam'];
+			a.merge(b);
+			expect( a.data.length ).toBe(1);
+			expect( a.data[0] ).toBe('Adam');
+		});
+		
+	});
+
+
+	describe('Commit.merge-advanced', function() {
+		var a,b;
+
+		beforeEach( function() {
+			a = new dvds.Repository(['this','is','very','boring']);
+			b = a.fork();
+		});
+
+		it('delete third element in a', function() {
+			a.data = ['this','is','boring'];
+			a.merge(b);
+			expect( a.data.length ).toBe(3);
+			expect( a.data[0] ).toBe('this');
+			expect( a.data[1] ).toBe('is');
+			expect( a.data[2] ).toBe('boring');
+		});
+		
+		it('delete third element in b', function() {
+			b.data = ['this','is','boring'];
+			a.merge(b);
+			expect( a.data.length ).toBe(3);
+			expect( a.data[0] ).toBe('this');
+			expect( a.data[1] ).toBe('is');
+			expect( a.data[2] ).toBe('boring');
+		});
+		
+	});
+
+});
