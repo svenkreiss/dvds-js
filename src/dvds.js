@@ -165,7 +165,7 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 	};
 
 	dvds.Commit.parseJSON = function(json) {
-		/* Builds a commit object form JSON but keeps the parents
+		/* Builds a commit object from JSON but keeps the parents
 		 * identified by ids only. Restoring those to full objects
 		 * has to be done manually. If invoked from form
 		 * Repository.parseJSON(), this is handled there.
