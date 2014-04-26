@@ -38,7 +38,7 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 
 			if (this.parents) {
 				this.parents.map( function(p) {
-					toSerialize.push(p.generateId(true)); 
+					toSerialize.push(p.generateId(true));
 				});
 			}
 			return CryptoJS.SHA3( JSON.stringify(toSerialize) ).toString().substr(0,40);
