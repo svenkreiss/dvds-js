@@ -32,9 +32,22 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 		this.dataHash = CryptoJS.SHA3( JSON.stringify(data) ).toString();
 		this.date = new Date();
 
-		var toSerialize = [this.dataHash,this.date];
-		if (this.parents) parents.map( function(p) { toSerialize.push(p.id); } );
-		this.id = CryptoJS.SHA3( JSON.stringify(toSerialize) ).toString().substr(0,40);
+		this.generateId = function(includeId) {
+			var toSerialize = [this.data,this.date];
+			if (includeId == true) toSerialize.unshift(this.id);
+
+			if (this.parents) {
+				this.parents.map( function(p) {
+					toSerialize.push(p.generateId(true)); 
+				});
+			}
+			return CryptoJS.SHA3( JSON.stringify(toSerialize) ).toString().substr(0,40);
+		}
+
+		this.id = this.generateId();
+
+
+
 
 		this.parentIds = function() {
 			/* ids of immediate parents */
@@ -69,6 +82,10 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 			out.date = this.date;
 			out.id = this.id;
 			return out;
+		};
+
+		this.validateId = function() {
+			return (this.id == this.generateId());
 		};
 
 
@@ -115,7 +132,27 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 			return out;
 		}
 
+		function mergeDictionaries(A,B,Ancestor) {
+			var out = {};
 
+			for (i in Ancestor) {
+				if (A[i] == B[i]  &&  A[i] == Ancestor[i]) {
+					// no change
+					out[i] = Ancestor[i];
+				} else if (A[i] == Ancestor[i]  &&  B[i] != Ancestor[i]) {
+					// A is unchanged, but B is modified
+					out[i] = B[i];
+				} else if (B[i] == Ancestor[i]  &&  A[i] != Ancestor[i]) {
+					// B is unchanged, but A is modified
+					out[i] = A[i];
+				} else if (A[i] != Ancestor[i]  &&  B[i] != Ancestor[i]) {
+					// A and B modified, use A
+					out[i] = A[i];
+				}
+			}
+
+			return out;
+		}
 
 		// -------- merge functions --------
 
@@ -147,6 +184,10 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 					console.log("merging arrays");
 					mergedData = mergeArrays(this.data,other.data,commonAncestor.data);
 					console.log(mergedData);
+				} else if (typeof(this.data) == 'object') {
+					console.log("merging a dictionary")
+					mergedData = mergeDictionaries(this.data,other.data,commonAncestor.data);
+					console.log(mergedData)
 				}
 				var mergedCommit = new dvds.Commit([this,other],mergedData);
 				console.log("mergedCommit");
@@ -226,6 +267,8 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 		};
 
 		this.commit = function() {
+			if (this.currentCommit && !this.currentCommit.validateId()) return;
+
 			var parents = this.currentCommit ? [this.currentCommit] : null;
 			commit = new dvds.Commit(parents, this.data);
 			if (this.currentCommit  &&  commit.dataHash == this.currentCommit.dataHash) {
@@ -247,6 +290,7 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 
 		this.fork = function() {
 			this.commit();
+			if (!this.currentCommit.validateId()) return;
 
 			var out = new dvds.Repository( JSON.parse(JSON.stringify(this.data)) );
 			out.commits = this.commits.map( function(c) { return c.clone(); });
@@ -261,6 +305,9 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 		this.merge = function(other) {
 			this.commit();
 			other.commit();
+
+			if (!this.currentCommit.validateId()) return;
+			if (!other.currentCommit.validateId()) return;
 
 			var mergedCommit = this.currentCommit.recursiveThreeWayMerge(other.currentCommit);
 			this.currentCommit = mergedCommit;
@@ -301,6 +348,11 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 					return newRepo.commitById(p);
 				});
 			}
+		}
+
+		// if there is a currentCommit, check whether it is valid
+		if (newRepo.currentCommit && !newRepo.currentCommit.validateId()) {
+			return;
 		}
 
 		return newRepo;

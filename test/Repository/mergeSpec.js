@@ -76,4 +76,37 @@ define(['dvds'], function(dvds) {
 		
 	});
 
+
+	describe('Commit.merge-dictionary', function() {
+		var a,b;
+
+		beforeEach( function() {
+			a = new dvds.Repository({'firstname':'John','lastname':'Doe'});
+			b = a.fork();
+		});
+
+		it('trivial', function() {
+			a.merge(b);
+			expect( a.data['firstname'] ).toBe('John');
+			expect( a.data['lastname'] ).toBe('Doe');
+		});
+
+		it('change entry', function() {
+			b.data['firstname'] = 'Peter';
+			a.merge(b);
+			expect( a.data['firstname'] ).toBe('Peter');
+			expect( a.data['lastname'] ).toBe('Doe');
+		});
+
+		it('change entries in both repos', function() {
+			b.data['firstname'] = 'Peter';
+			a.data['firstname'] = 'Daniel';
+			a.data['lastname'] = 'Smith';
+			a.merge(b);
+			expect( a.data['firstname'] ).toBe('Daniel');
+			expect( a.data['lastname'] ).toBe('Smith');
+		});
+
+	});
+
 });
