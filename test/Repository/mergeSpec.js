@@ -109,4 +109,35 @@ define(['dvds'], function(dvds) {
 
 	});
 
+
+	describe('Commit.merge-dictionary-with-array', function() {
+		var a,b;
+
+		beforeEach( function() {
+			a = new dvds.Repository({'myData':['this','is','very','boring']});
+			b = a.fork();
+		});
+
+		it('delete third element in a and modify b', function() {
+			a.data = {'myData':['this','is','boring']};
+			b.data = {'myData':['all','is','interesting']};
+			a.merge(b);
+			expect( a.data['myData'].length ).toBe(3);
+			expect( a.data['myData'][0] ).toBe('all');
+			expect( a.data['myData'][1] ).toBe('is');
+			expect( a.data['myData'][2] ).toBe('boring');
+		});
+		
+		it('delete third element in b and modify a', function() {
+			b.data = {'myData':['all','is','boring']};
+			a.data = {'myData':['this','is','interesting']};
+			a.merge(b);
+			expect( a.data['myData'].length ).toBe(3);
+			expect( a.data['myData'][0] ).toBe('all');
+			expect( a.data['myData'][1] ).toBe('is');
+			expect( a.data['myData'][2] ).toBe('interesting');
+		});
+		
+	});
+
 });

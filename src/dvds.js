@@ -125,7 +125,7 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 					if (i < A.length) out.push( A[i] );
 				} else if (mapA[i] == -1  &&  mapB[i] == -1) {
 					// A and B modified, use A
-					out.push( A[i] );
+					out.push( mergeData(A[i],B[i],Ancestor[i]) );
 				}
 			}
 
@@ -146,12 +146,27 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 					// B is unchanged, but A is modified
 					out[i] = A[i];
 				} else if (A[i] != Ancestor[i]  &&  B[i] != Ancestor[i]) {
-					// A and B modified, use A
-					out[i] = A[i];
+					// A and B modified: check whether it is an Array
+					// or object. If not, use A (if it exists).
+					out[i] = mergeData(A[i],B[i],Ancestor[i]);
 				}
 			}
 
 			return out;
+		}
+
+		function mergeData(A,B,Ancestor) {
+			var mergedData = A;
+			if (Array.isArray(A) && Array.isArray(B) && Array.isArray(Ancestor)) {
+				console.log("merging arrays");
+				mergedData = mergeArrays(A,B,Ancestor);
+				console.log(mergedData);
+			} else if (typeof(A) == 'object' && typeof(B) == 'object' && typeof(Ancestor) == 'object') {
+				console.log("merging a dictionary")
+				mergedData = mergeDictionaries(A,B,Ancestor);
+				console.log(mergedData)
+			}
+			return mergedData;
 		}
 
 		// -------- merge functions --------
@@ -179,16 +194,7 @@ define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
 					console.log('great. common ancestor found.');
 				}
 				// the actual merge
-				var mergedData = this.data; // TODO
-				if (Array.isArray(this.data)) {
-					console.log("merging arrays");
-					mergedData = mergeArrays(this.data,other.data,commonAncestor.data);
-					console.log(mergedData);
-				} else if (typeof(this.data) == 'object') {
-					console.log("merging a dictionary")
-					mergedData = mergeDictionaries(this.data,other.data,commonAncestor.data);
-					console.log(mergedData)
-				}
+				var mergedData = mergeData(this.data,other.data,commonAncestor.data);
 				var mergedCommit = new dvds.Commit([this,other],mergedData);
 				console.log("mergedCommit");
 				console.log(mergedCommit.parentIds().join(','));
