@@ -98,18 +98,20 @@ a.merge(bReceived);
 <script src="http://s3.amazonaws.com/flaskApp_static/static/d3/d3.v3.min.js" charset="utf-8"></script>
 <script src="http://s3.amazonaws.com/flaskApp_static/static/bootstrap3/js/bootstrap.min.js"></script>
 <script src="lib/require.js"></script>
-<script src="lib/dvds.min.js"></script>
 <script>
 require.config({
     paths: {
-        'crypto-js.SHA3': 'http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3',
+        'crypto-js': 'http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3',
+        'dvds': 'lib/dvds.min',
+        'dvds.visualize': 'lib/dvds.min',
     },
     shim: {
-        'crypto-js.SHA3': {
+        'crypto-js': {
             exports: 'CryptoJS'
         }
     }
 });
+
 require(['dvds','dvds.visualize'], function(dvds) {
   var a = new dvds.Repository(['Paul','Adam']);
   var b = a.fork();
