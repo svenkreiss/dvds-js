@@ -12,11 +12,13 @@ requirejs.config({
     baseUrl: '/base/src',
 
     paths: {
-        'crypto-js.SHA3': '//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3',
+        // technically, this is only crypto-js.SHA3 and it could be named
+        // just that, but that would confuse node.js
+        'crypto-js': '//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3',
     },
 
     shim: {
-        'crypto-js.SHA3': {
+        'crypto-js': {
             exports: 'CryptoJS'
         }
     },

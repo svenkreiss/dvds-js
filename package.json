@@ -1,6 +1,6 @@
 {
   "name": "dvds",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Distributed versioned data structures.",
   "repository": {
     "type": "git",
@@ -10,8 +10,13 @@
   "contributors": [],
   "license": "MIT",
   "dependencies": {
+    "amdefine": ">=0.1.0",
     "crypto-js": "~3.1.2-2"
   },
+  "main": "build/dvds.min.js",
+  "files": [
+    "build/dvds.min.js"
+  ],
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-uglify": "~0.3.2",
@@ -32,6 +37,8 @@
     "grunt-jscs-checker": "~0.4.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
+    "test": "npm run test-node && npm run test-browser",
+    "test-node": "mocha -R spec ./test/test-node.js",
+    "test-browser": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
   }
 }

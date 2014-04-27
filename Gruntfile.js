@@ -1,5 +1,10 @@
 module.exports = function(grunt) {
 
+  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks("grunt-jscs-checker");
+
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -21,6 +26,15 @@ module.exports = function(grunt) {
         configFile: 'karma.conf.js'
       }
     },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+          clearRequireCache: true
+        },
+        src: ['test/test-node.js'],
+      }
+    },
     jscs: {
       src: "src/*.js",
       options: {
@@ -39,11 +53,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks("grunt-jscs-checker");
-
   // Default task(s).
-  grunt.registerTask('default', ['jscs', 'uglify']);
+  grunt.registerTask('default', ['mochaTest', 'jscs', 'uglify']);
 
 };

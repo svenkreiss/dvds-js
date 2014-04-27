@@ -2,14 +2,15 @@ if (typeof define !== 'function') {
 	var define = require('amdefine')(module);
 }
 
-define('dvds', ['crypto-js.SHA3'], function(CryptoJS) {
+
+define(['crypto-js'], function(CryptoJS) {
 	/*
 	 * Dependency: CryptoJS for SHA3 (using SHA3 instead of SHA1 because it is used in uncentral).
 	 */
 
 
 
-	dvds = {};
+	dvds = {'name': 'dvds'};
 
 
 	/* ---------- objects for version control ----------- */
